@@ -11,6 +11,10 @@ class MyTreatmentCard extends StatefulWidget {
 
 class _MyTreatmentCardState extends State<MyTreatmentCard> {
   String? selectedTreatment;
+  String? selectedTreatment2;
+
+  String? selectedTreatment3;
+
   String? _selected;
 
   int maleCount = 0;
@@ -18,166 +22,169 @@ class _MyTreatmentCardState extends State<MyTreatmentCard> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            margin: const EdgeInsets.all(16.0),
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8.0),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 2,
-                  blurRadius: 5,
-                  offset: const Offset(0, 3),
+    return Column(
+      children: [
+        Container(
+          margin: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 5,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Choose Treatment',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Choose Treatment',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+              ),
+              const SizedBox(height: 16.0),
+              const Text("Treatments"),
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                height: 55,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.blue,
+                    width: 1.0,
                   ),
+                  borderRadius: const BorderRadius.all(Radius.circular(7.0)),
                 ),
-                const SizedBox(height: 16.0),
-                Container(
-                  height: 55,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.blue,
-                      width: 1.0,
+                child: Row(
+                  children: [
+                    const SizedBox(
+                      width: 10,
                     ),
-                    borderRadius: const BorderRadius.all(Radius.circular(7.0)),
-                  ),
-                  child: Row(
+                    Expanded(
+                      child: DropdownButton<String>(
+                        value: selectedTreatment,
+                        onChanged: (newValue) {
+                          setState(() {
+                            selectedTreatment = newValue!;
+                          });
+                        },
+                        items: <String>[
+                          'Treatment A',
+                          'Treatment B',
+                          'Treatment C',
+                        ].map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              const Text("Add Patience"),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Column(
                     children: [
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: DropdownButton<String>(
-                          value: selectedTreatment,
-                          onChanged: (newValue) {
-                            setState(() {
-                              selectedTreatment = newValue!;
-                            });
-                          },
-                          items: <String>[
-                            'Treatment A',
-                            'Treatment B',
-                            'Treatment C',
-                          ].map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
-                      ),
+                      Container(
+                          height: 40,
+                          width: 60,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black),
+                          ),
+                          child: const Center(child: Text('Male'))),
                     ],
                   ),
-                ),
-                const SizedBox(height: 16.0),
-                const Text("Add Patience"),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Column(
-                      children: [
-                        Container(
-                            height: 40,
-                            width: 60,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black),
-                            ),
-                            child: const Center(child: Text('Male'))),
-                      ],
-                    ),
-                    CircleAvatar(
-                      backgroundColor: Colors.green,
-                      child: IconButton(
-                        icon: const Icon(Icons.remove),
-                        onPressed: () {
-                          setState(() {
-                            maleCount = maleCount > 0 ? maleCount - 1 : 0;
-                          });
-                        },
-                      ),
-                    ),
-                    Container(
-                        height: 30,
-                        width: 40,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black),
-                        ),
-                        child: Center(child: Text('$maleCount'))),
-                    IconButton(
-                      icon: const Icon(Icons.add),
+                  CircleAvatar(
+                    backgroundColor: Colors.green,
+                    child: IconButton(
+                      icon: const Icon(Icons.remove),
                       onPressed: () {
                         setState(() {
-                          maleCount++;
+                          maleCount = maleCount > 0 ? maleCount - 1 : 0;
                         });
                       },
                     ),
-                  ],
-                ),
-                const SizedBox(height: 8.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Column(
-                      children: [
-                        Container(
-                            height: 40,
-                            width: 60,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black),
-                            ),
-                            child: const Center(child: Text('Female'))),
-                      ],
-                    ),
-                    CircleAvatar(
-                      backgroundColor: Colors.green,
-                      child: IconButton(
-                        icon: const Icon(Icons.remove),
-                        onPressed: () {
-                          setState(() {
-                            femaleCount = femaleCount > 0 ? femaleCount - 1 : 0;
-                          });
-                        },
+                  ),
+                  Container(
+                      height: 30,
+                      width: 40,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black),
                       ),
-                    ),
-                    Container(
-                        height: 30,
-                        width: 40,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black),
-                        ),
-                        child: Center(child: Text('$femaleCount'))),
-                    IconButton(
-                      icon: const Icon(Icons.add),
+                      child: Center(child: Text('$maleCount'))),
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: () {
+                      setState(() {
+                        maleCount++;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Column(
+                    children: [
+                      Container(
+                          height: 40,
+                          width: 60,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black),
+                          ),
+                          child: const Center(child: Text('Female'))),
+                    ],
+                  ),
+                  CircleAvatar(
+                    backgroundColor: Colors.green,
+                    child: IconButton(
+                      icon: const Icon(Icons.remove),
                       onPressed: () {
                         setState(() {
-                          femaleCount++;
+                          femaleCount = femaleCount > 0 ? femaleCount - 1 : 0;
                         });
                       },
                     ),
-                  ],
-                ),
-                const SizedBox(height: 16.0),
-                //CustomButton(text: "Save", onPressed: () {})
-              ],
-            ),
+                  ),
+                  Container(
+                      height: 30,
+                      width: 40,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black),
+                      ),
+                      child: Center(child: Text('$femaleCount'))),
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: () {
+                      setState(() {
+                        femaleCount++;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16.0),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(15.0),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -269,11 +276,96 @@ class _MyTreatmentCardState extends State<MyTreatmentCard> {
                 const SizedBox(
                   height: 15,
                 ),
+                const Text("Treatment Time"),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  height: 55,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.blue,
+                      width: 1.0,
+                    ),
+                    borderRadius: const BorderRadius.all(Radius.circular(7.0)),
+                  ),
+                  child: Row(
+                    children: [
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: DropdownButton<String>(
+                          value: selectedTreatment2,
+                          onChanged: (newValue) {
+                            setState(() {
+                              selectedTreatment2 = newValue!;
+                            });
+                          },
+                          items: <String>[
+                            'Treatment A',
+                            'Treatment B',
+                            'Treatment C',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  height: 55,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.blue,
+                      width: 1.0,
+                    ),
+                    borderRadius: const BorderRadius.all(Radius.circular(7.0)),
+                  ),
+                  child: Row(
+                    children: [
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: DropdownButton<String>(
+                          value: selectedTreatment3,
+                          onChanged: (newValue) {
+                            setState(() {
+                              selectedTreatment3 = newValue!;
+                            });
+                          },
+                          items: <String>[
+                            'Treatment A',
+                            'Treatment B',
+                            'Treatment C',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomButton(text: "Save", onPressed: () {})
               ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
