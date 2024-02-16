@@ -11,11 +11,18 @@ class TreatmentAddPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
-            children: [MyTreatmentCard()],
+            children: [
+              MyTreatmentCard(
+                whatsapp: whatsapp,
+                address: address,
+                location: location,
+                branch: branch,
+              )
+            ],
           ),
         ),
       ),

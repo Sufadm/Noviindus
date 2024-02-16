@@ -1,8 +1,15 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
 Future<void> postDataToServer({
   required String? selectedTreatment,
+  required String? whatsapp,
+  required String? address,
+  required String? location,
+  required String? branch,
   required String? selectedTreatment2,
   required String? selectedTreatment3,
   required int maleCount,
@@ -16,41 +23,40 @@ Future<void> postDataToServer({
   required String? treatmentTime,
 }) async {
   const String url = 'https://flutter-amr.noviindus.in/api/PatientUpdate';
-
-  Map<String, dynamic> data = {
-    'selectedTreatment': selectedTreatment,
-    'selectedTreatment2': selectedTreatment2,
-    'selectedTreatment3': selectedTreatment3,
-    'maleCount': maleCount,
-    'femaleCount': femaleCount,
-    'totalAmount': totalAmount,
-    'discountAmount': discountAmount,
-    'paymentOption': paymentOption,
-    'advanceAmount': advanceAmount,
-    'balanceAmount': balanceAmount,
-    'treatmentDate': treatmentDate,
-    'treatmentTime': treatmentTime,
-    // Add more fields as needed
-  };
-
+  final shared = await SharedPreferences.getInstance();
+  String? accessToken = shared.getString('access');
   try {
     final response = await http.post(
       Uri.parse(url),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken',
       },
-      body: jsonEncode(data),
+      body: {
+        'selectedTreatment': selectedTreatment!,
+        'whatsapp': whatsapp!,
+        'address': address!,
+        'location': location!,
+        'branch': branch!,
+        'selectedTreatment2': selectedTreatment2!,
+        'selectedTreatment3': selectedTreatment3!,
+        'maleCount': maleCount.toString(),
+        'femaleCount': femaleCount.toString(),
+        'totalAmount': totalAmount!,
+        'discountAmount': discountAmount!,
+        'paymentOption': paymentOption!,
+        'advanceAmount': advanceAmount!,
+        'balanceAmount': balanceAmount!,
+        'treatmentDate': treatmentDate!,
+        'treatmentTime': treatmentTime!,
+      },
     );
 
     if (response.statusCode == 200) {
-      // Data posted successfully
       print('Data posted successfully');
     } else {
-      // Error occurred
       print('Failed to post data. Error: ${response.reasonPhrase}');
     }
   } catch (e) {
-    // Exception occurred
     print('Exception occurred while posting data: $e');
   }
 }

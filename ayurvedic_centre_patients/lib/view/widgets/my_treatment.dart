@@ -1,9 +1,21 @@
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:ayurvedic_centre_patients/controller/register_api.dart';
 import 'package:ayurvedic_centre_patients/view/widgets/custom_button.dart';
-import 'package:ayurvedic_centre_patients/view/widgets/textfor_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 
 class MyTreatmentCard extends StatefulWidget {
-  const MyTreatmentCard({super.key});
+  final whatsapp;
+  final address;
+  final location;
+  final branch;
+  const MyTreatmentCard(
+      {Key? key, this.whatsapp, this.address, this.location, this.branch})
+      : super(key: key);
 
   @override
   _MyTreatmentCardState createState() => _MyTreatmentCardState();
@@ -12,13 +24,19 @@ class MyTreatmentCard extends StatefulWidget {
 class _MyTreatmentCardState extends State<MyTreatmentCard> {
   String? selectedTreatment;
   String? selectedTreatment2;
-
   String? selectedTreatment3;
-
   String? _selected;
 
   int maleCount = 0;
   int femaleCount = 0;
+
+  final TextEditingController totalAmountController = TextEditingController();
+  final TextEditingController discountAmountController =
+      TextEditingController();
+  final TextEditingController advanceAmountController = TextEditingController();
+  final TextEditingController balanceAmountController = TextEditingController();
+  final TextEditingController treatmentDateController = TextEditingController();
+  final TextEditingController treatmentTimeController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -77,9 +95,9 @@ class _MyTreatmentCardState extends State<MyTreatmentCard> {
                           });
                         },
                         items: <String>[
-                          'Treatment A',
-                          'Treatment B',
-                          'Treatment C',
+                          '1',
+                          '2',
+                          '3',
                         ].map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
@@ -189,15 +207,32 @@ class _MyTreatmentCardState extends State<MyTreatmentCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text("Total Amount"),
-                const TextFormFieldWidget(
-                  hintText: "",
+                TextFormField(
+                  controller: totalAmountController,
+                  decoration: InputDecoration(
+                    hintText: "",
+                    border: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                          color: Colors.blue), // Set the border color
+                      borderRadius:
+                          BorderRadius.circular(8.0), // Set the border radius
+                    ),
+                  ),
                 ),
                 const SizedBox(
                   height: 15,
                 ),
                 const Text("Discount Amount"),
-                const TextFormFieldWidget(
-                  hintText: "",
+                TextFormField(
+                  controller: discountAmountController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.blue),
+                      borderRadius:
+                          BorderRadius.circular(8.0), // Set the border radius
+                    ),
+                    hintText: "",
+                  ),
                 ),
                 const SizedBox(
                   height: 15,
@@ -212,11 +247,10 @@ class _MyTreatmentCardState extends State<MyTreatmentCard> {
                             _selected = value;
                           });
                         }),
-                        Text(
+                        const Text(
                           "CASH",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: _selected == "option1" ? Colors.blue : null,
                           ),
                         ),
                       ],
@@ -228,11 +262,10 @@ class _MyTreatmentCardState extends State<MyTreatmentCard> {
                             _selected = value;
                           });
                         }),
-                        Text(
+                        const Text(
                           "CARD",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: _selected == "option2" ? Colors.blue : null,
                           ),
                         ),
                       ],
@@ -244,42 +277,76 @@ class _MyTreatmentCardState extends State<MyTreatmentCard> {
                             _selected = value;
                           });
                         }),
-                        Text(
+                        const Text(
                           "UPI",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: _selected == "option3" ? Colors.blue : null,
                           ),
                         ),
                       ],
                     ),
                   ],
                 ),
+                const SizedBox(height: 15),
                 const Text("Advance Amount"),
-                const TextFormFieldWidget(
-                  hintText: "",
+                TextFormField(
+                  controller: advanceAmountController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                          color: Colors.blue), // Set the border color
+                      borderRadius:
+                          BorderRadius.circular(8.0), // Set the border radius
+                    ),
+                    hintText: "",
+                  ),
                 ),
                 const SizedBox(
                   height: 15,
                 ),
                 const Text("Balance Amount"),
-                const TextFormFieldWidget(
-                  hintText: "",
+                TextFormField(
+                  controller: balanceAmountController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                          color: Colors.blue), // Set the border color
+                      borderRadius:
+                          BorderRadius.circular(8.0), // Set the border radius
+                    ),
+                    hintText: "",
+                  ),
                 ),
                 const SizedBox(
                   height: 15,
                 ),
                 const Text("Treatment Date"),
-                const TextFormFieldWidget(
-                  hintText: "",
+                TextFormField(
+                  controller: treatmentDateController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                          color: Colors.blue), // Set the border color
+                      borderRadius:
+                          BorderRadius.circular(8.0), // Set the border radius
+                    ),
+                    hintText: "",
+                  ),
                 ),
                 const SizedBox(
                   height: 15,
                 ),
                 const Text("Treatment Time"),
-                const SizedBox(
-                  height: 10,
+                TextFormField(
+                  controller: treatmentTimeController,
+                  decoration: const InputDecoration(
+                    hintText: "",
+                  ),
                 ),
+                const SizedBox(
+                  height: 15,
+                ),
+                const Text("Select Treatment 2"),
                 Container(
                   height: 55,
                   decoration: BoxDecoration(
@@ -320,6 +387,7 @@ class _MyTreatmentCardState extends State<MyTreatmentCard> {
                 const SizedBox(
                   height: 20,
                 ),
+                const Text("Select Treatment 3"),
                 Container(
                   height: 55,
                   decoration: BoxDecoration(
@@ -358,9 +426,13 @@ class _MyTreatmentCardState extends State<MyTreatmentCard> {
                   ),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
-                CustomButton(text: "Save", onPressed: () {})
+                CustomButton(
+                    text: "Save",
+                    onPressed: () {
+                      saveFormDataToPdf();
+                    })
               ],
             ),
           ),
@@ -381,4 +453,67 @@ class _MyTreatmentCardState extends State<MyTreatmentCard> {
       activeColor: Colors.black,
     );
   }
+
+// Inside your saveFormDataToPdf function
+  Future<void> saveFormDataToPdf() async {
+    final pdf = pw.Document();
+
+    // Add form data to the PDF
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Center(
+            child: pw.Text('Your form data goes here'),
+          );
+        },
+      ),
+    );
+
+    // Save the PDF to a file
+    final Uint8List bytes =
+        pdf.save() as Uint8List; // Convert List<int> to Uint8List
+    final file = await createPdfFile(bytes);
+
+    // Print or share the file as needed
+    await Printing.sharePdf(bytes: bytes, filename: 'Form_Data.pdf');
+  }
+
+  Future<File> createPdfFile(List<int> bytes) async {
+    // Create a file in the app's documents directory
+    final dir = await getApplicationDocumentsDirectory();
+    final file = File('${dir.path}/Form_Data.pdf');
+
+    // Write the PDF bytes to the file
+    await file.writeAsBytes(bytes);
+
+    return file;
+  }
 }
+  // void saveFormData() {
+  //   String? totalAmount = totalAmountController.text;
+  //   String? discountAmount = discountAmountController.text;
+  //   String? advanceAmount = advanceAmountController.text;
+  //   String? balanceAmount = balanceAmountController.text;
+  //   String? treatmentDate = treatmentDateController.text;
+  //   String? treatmentTime = treatmentTimeController.text;
+
+  //   postDataToServer(
+  //     address: widget.address,
+  //     branch: widget.branch,
+  //     location: widget.location,
+  //     whatsapp: widget.whatsapp,
+  //     selectedTreatment: selectedTreatment,
+  //     selectedTreatment2: selectedTreatment2,
+  //     selectedTreatment3: selectedTreatment3,
+  //     maleCount: maleCount,
+  //     femaleCount: femaleCount,
+  //     totalAmount: totalAmount,
+  //     discountAmount: discountAmount,
+  //     paymentOption: _selected,
+  //     advanceAmount: advanceAmount,
+  //     balanceAmount: balanceAmount,
+  //     treatmentDate: treatmentDate,
+  //     treatmentTime: treatmentTime,
+  //   );
+  // }
+
