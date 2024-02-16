@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:ayurvedic_centre_patients/model/patient_details.dart';
 import 'package:ayurvedic_centre_patients/model/patient_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;

@@ -1,4 +1,3 @@
-import 'package:ayurvedic_centre_patients/view/page/home_page.dart';
 import 'package:ayurvedic_centre_patients/view/page/login_page.dart';
 import 'package:flutter/material.dart';
 

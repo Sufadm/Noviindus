@@ -1,10 +1,9 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:ayurvedic_centre_patients/controller/register_api.dart';
+
 import 'package:ayurvedic_centre_patients/view/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
@@ -143,13 +142,16 @@ class _MyTreatmentCardState extends State<MyTreatmentCard> {
                         border: Border.all(color: Colors.black),
                       ),
                       child: Center(child: Text('$maleCount'))),
-                  IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: () {
-                      setState(() {
-                        maleCount++;
-                      });
-                    },
+                  CircleAvatar(
+                    backgroundColor: Colors.green,
+                    child: IconButton(
+                      icon: const Icon(Icons.add),
+                      onPressed: () {
+                        setState(() {
+                          maleCount++;
+                        });
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -186,13 +188,16 @@ class _MyTreatmentCardState extends State<MyTreatmentCard> {
                         border: Border.all(color: Colors.black),
                       ),
                       child: Center(child: Text('$femaleCount'))),
-                  IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: () {
-                      setState(() {
-                        femaleCount++;
-                      });
-                    },
+                  CircleAvatar(
+                    backgroundColor: Colors.green,
+                    child: IconButton(
+                      icon: const Icon(Icons.add),
+                      onPressed: () {
+                        setState(() {
+                          femaleCount++;
+                        });
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -212,10 +217,8 @@ class _MyTreatmentCardState extends State<MyTreatmentCard> {
                   decoration: InputDecoration(
                     hintText: "",
                     border: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                          color: Colors.blue), // Set the border color
-                      borderRadius:
-                          BorderRadius.circular(8.0), // Set the border radius
+                      borderSide: const BorderSide(color: Colors.blue),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
                 ),
@@ -228,8 +231,7 @@ class _MyTreatmentCardState extends State<MyTreatmentCard> {
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderSide: const BorderSide(color: Colors.blue),
-                      borderRadius:
-                          BorderRadius.circular(8.0), // Set the border radius
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
                     hintText: "",
                   ),
@@ -293,10 +295,8 @@ class _MyTreatmentCardState extends State<MyTreatmentCard> {
                   controller: advanceAmountController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                          color: Colors.blue), // Set the border color
-                      borderRadius:
-                          BorderRadius.circular(8.0), // Set the border radius
+                      borderSide: const BorderSide(color: Colors.blue),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
                     hintText: "",
                   ),
@@ -309,10 +309,8 @@ class _MyTreatmentCardState extends State<MyTreatmentCard> {
                   controller: balanceAmountController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                          color: Colors.blue), // Set the border color
-                      borderRadius:
-                          BorderRadius.circular(8.0), // Set the border radius
+                      borderSide: const BorderSide(color: Colors.blue),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
                     hintText: "",
                   ),
@@ -325,10 +323,8 @@ class _MyTreatmentCardState extends State<MyTreatmentCard> {
                   controller: treatmentDateController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                          color: Colors.blue), // Set the border color
-                      borderRadius:
-                          BorderRadius.circular(8.0), // Set the border radius
+                      borderSide: const BorderSide(color: Colors.blue),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
                     hintText: "",
                   ),
@@ -339,7 +335,11 @@ class _MyTreatmentCardState extends State<MyTreatmentCard> {
                 const Text("Treatment Time"),
                 TextFormField(
                   controller: treatmentTimeController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.blue),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
                     hintText: "",
                   ),
                 ),
@@ -430,15 +430,31 @@ class _MyTreatmentCardState extends State<MyTreatmentCard> {
                 ),
                 CustomButton(
                     text: "Save",
-                    onPressed: () {
-                      saveFormDataToPdf();
-                    })
+                    onPressed: () async {
+                      await generatePdf();
+                    }),
               ],
             ),
           ),
         ),
       ],
     );
+  }
+
+  Future<pw.Document> generatePdf() async {
+    final pdf = pw.Document();
+
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Center(
+            child: pw.Text('Hello, this is my PDF!'),
+          );
+        },
+      ),
+    );
+
+    return pdf;
   }
 
   Radio<String> createRadio(
@@ -454,11 +470,9 @@ class _MyTreatmentCardState extends State<MyTreatmentCard> {
     );
   }
 
-// Inside your saveFormDataToPdf function
   Future<void> saveFormDataToPdf() async {
     final pdf = pw.Document();
 
-    // Add form data to the PDF
     pdf.addPage(
       pw.Page(
         build: (pw.Context context) {
@@ -469,21 +483,16 @@ class _MyTreatmentCardState extends State<MyTreatmentCard> {
       ),
     );
 
-    // Save the PDF to a file
-    final Uint8List bytes =
-        pdf.save() as Uint8List; // Convert List<int> to Uint8List
+    final Uint8List bytes = pdf.save() as Uint8List;
     final file = await createPdfFile(bytes);
 
-    // Print or share the file as needed
     await Printing.sharePdf(bytes: bytes, filename: 'Form_Data.pdf');
   }
 
   Future<File> createPdfFile(List<int> bytes) async {
-    // Create a file in the app's documents directory
     final dir = await getApplicationDocumentsDirectory();
     final file = File('${dir.path}/Form_Data.pdf');
 
-    // Write the PDF bytes to the file
     await file.writeAsBytes(bytes);
 
     return file;

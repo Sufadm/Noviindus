@@ -48,11 +48,6 @@ class TextFormFieldWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(10.0),
           borderSide: const BorderSide(color: Colors.blue),
         ),
-        // prefixIcon: Icon(
-        //   icon,
-        //   color: Colors.grey,
-        // ),
-        //contentPadding: const EdgeInsets.symmetric(vertical: 17),
       ),
       keyboardType: keyboardType,
       obscureText: obscureText,
